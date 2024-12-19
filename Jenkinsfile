@@ -29,7 +29,6 @@ pipeline {
     stage('Pushing Image with Podman') {
       environment {
         registryCredential = 'dockerhub-credentials'
-        DOCKER_USERNAME = 'joedayz'
       }
 
       steps {
@@ -37,7 +36,7 @@ pipeline {
           withCredentials([usernamePassword(credentialsId: "${registryCredential}", usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
             sh """
               podman login -u ${USERNAME} -p ${PASSWORD} registry.hub.docker.com
-              podman push ${podmanImageName}:${podmanImageTag} registry.hub.docker.com/${DOCKER_USERNAME}/${podmanImageName}:${podmanImageTag}
+              podman push ${podmanImageName}:${podmanImageTag} registry.hub.docker.com/${podmanImageName}:${podmanImageTag}
             """
           }
         }
