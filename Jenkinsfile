@@ -30,14 +30,16 @@ pipeline {
       environment {
         registryCredential = 'dockerhub-credentials'
       }
+
       steps {
         script {
-          sh """
-            podman login -u \$(cat /path/to/username-file) -p \$(cat /path/to/password-file) registry.hub.docker.com
-            podman push ${podmanImageName}:${podmanImageTag}
-          """
+          withCredentials([usernamePassword(credentialsId: "${registryCredential}", usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+            sh """
+              podman login -u ${USERNAME} -p ${PASSWORD}
+              podman push ${podmanImageName}:${podmanImageTag}
+            """
+          }
         }
-      }
     }
 
     stage('Deploying App to Kubernetes') {
