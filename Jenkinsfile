@@ -3,6 +3,7 @@ pipeline {
   environment {
     podmanImageName = "joedayz/react-app"
     podmanImageTag = "latest"
+    PATH = "/usr/local/bin:$PATH"  
   }
 
   agent any
