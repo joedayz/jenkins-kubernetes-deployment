@@ -35,8 +35,8 @@ pipeline {
         script {
           withCredentials([usernamePassword(credentialsId: "${registryCredential}", usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
             sh """
-              podman login -u ${USERNAME} -p ${PASSWORD}
-              podman push ${podmanImageName}:${podmanImageTag}
+              podman login -u ${USERNAME} -p ${PASSWORD} registry.hub.docker.com
+              podman push ${podmanImageName}:${podmanImageTag} registry.hub.docker.com/${DOCKER_USERNAME}/${podmanImageName}:${podmanImageTag}
             """
           }
         }
