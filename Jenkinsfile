@@ -1,8 +1,8 @@
 pipeline {
 
   environment {
-    dockerimagename = "joedayz/react-app"
-    dockerImage = ""
+    podmanImageName = "joedayz/react-app"
+    podmanImageTag = "latest"
   }
 
   agent any
@@ -15,23 +15,26 @@ pipeline {
       }
     }
 
-    stage('Build image') {
-      steps{
+    stage('Build Image with Podman') {
+      steps {
         script {
-          dockerImage = docker.build dockerimagename
+          sh """
+            podman build -t ${podmanImageName}:${podmanImageTag} .
+          """
         }
       }
     }
 
-    stage('Pushing Image') {
+    stage('Pushing Image with Podman') {
       environment {
-               registryCredential = 'dockerhub-credentials'
-           }
-      steps{
+        registryCredential = 'dockerhub-credentials'
+      }
+      steps {
         script {
-          docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {
-            dockerImage.push("latest")
-          }
+          sh """
+            podman login -u \$(cat /path/to/username-file) -p \$(cat /path/to/password-file) registry.hub.docker.com
+            podman push ${podmanImageName}:${podmanImageTag}
+          """
         }
       }
     }
