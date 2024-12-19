@@ -29,6 +29,7 @@ pipeline {
     stage('Pushing Image with Podman') {
       environment {
         registryCredential = 'dockerhub-credentials'
+        DOCKER_USERNAME = 'joedayz'
       }
 
       steps {
